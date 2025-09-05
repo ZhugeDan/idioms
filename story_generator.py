@@ -4,6 +4,8 @@ from config import DEEPSEEK_API_KEY, DEEPSEEK_MODEL
 
 
 def generate_story_script(idiom, animal_a, animal_b):
+
+
     """调用DeepSeek API生成故事脚本"""
     url = "https://api.deepseek.com/v1/chat/completions"
     headers = {
@@ -12,14 +14,14 @@ def generate_story_script(idiom, animal_a, animal_b):
     }
 
     prompt = f"""
-    你是一个经验丰富的儿童故事作家。请将成语【{idiom}】改编成一个适合制作3分钟动画短片的剧本，用青少年喜欢看的形式展示出来】。
+        你是一个经验丰富的儿童故事作家。请将成语【{idiom}】改编成一个适合制作3分钟动画短片的剧本，用青少年喜欢看的形式展示出来。
 
-    输出要求：
-    1. 严格使用JSON格式
-    2. 包含字段: title, logline, scenes
-    3. 每个scene包含: scene_number, visual_description, dialogue, narration
-    4. 对话格式: [{"character": "角色名", "text": "对话内容"}]
-    """
+        输出要求：
+        1. 严格使用JSON格式
+        2. 包含字段: title, logline, scenes
+        3. 每个scene包含: scene_number, visual_description, dialogue, narration
+        4. 对话格式: [{{"character": "角色名", "text": "对话内容"}}]  # 注意这里的花括号变成了双份
+        """  # 注意这行末尾的引号
 
     data = {
         "model": DEEPSEEK_MODEL,
