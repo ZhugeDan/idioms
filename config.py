@@ -14,13 +14,13 @@ IMAGE_MODEL = "runwayml/stable-diffusion-v1-5"
 IMAGE_SIZE = (512, 512)
 
 # 语音合成配置 (示例使用Azure)
-AZURE_SPEECH_KEY = "your_azure_speech_key"
+AZURE_SPEECH_KEY = os.getenv("AZURE_SPEECH_KEY", "")
 AZURE_REGION = "eastasia"
+# 简化VOICE_MAPPING，只定义一个用于讲述故事的可爱音色，例如晓晓的友好风格
 VOICE_MAPPING = {
-    "旁白": "zh-CN-XiaoxiaoNeural",
-    "大橘猫": "zh-CN-YunxiNeural",
-    "小兔子": "zh-CN-XiaoyiNeural"
+    "storyteller": "zh-CN-XiaoxiaoNeural" # 这是一个常用且比较可爱的女声
 }
+# 其他配置保持不变...
 
 # 视频配置
 VIDEO_FPS = 24

@@ -1,53 +1,44 @@
-#  适用于 MoviePy 2.x（2.2.1 亲测）
+
+
+
 from moviepy import (
     ImageClip,
     AudioFileClip,
     CompositeAudioClip,
     concatenate_videoclips,
 )
+
 from config import VIDEO_FPS, SCENE_DURATION
 import os
 
 
-def compose_video(script, project_dir):
-    """合成完整视频"""
-    clips = []
+def compose_video(story_text, project_dir, image_path, audio_path):
+    """合成视频：单张图片配整个故事的音频"""
+    from moviepy import ImageClip, AudioFileClip
 
-    for i, scene in enumerate(script["scenes"]):
-        # 1. 图像片段
-        img_path = os.path.join(project_dir, f"scene_{i + 1}.png")
-        img_clip = ImageClip(img_path).with_duration(SCENE_DURATION)
+    # 加载图片和音频
+    img_clip = ImageClip(image_path)
+    audio_clip = AudioFileClip(audio_path)
 
-        # 2. 音频片段
-        audio_clips = []
+    # 设置图片显示时长与音频等长
+    img_clip = img_clip.with_duration(audio_clip.duration)
 
-        # 旁白
-        if scene.get("narration"):
-            nar_path = os.path.join(project_dir, f"scene_{i + 1}_nar.wav")
-            audio_clips.append(AudioFileClip(nar_path))
+    # 将音频设置给图片剪辑
+    video_clip = img_clip.with_audio(audio_clip)
 
-        # 对话
-        for j, _ in enumerate(scene["dialogue"]):
-            dia_path = os.path.join(project_dir, f"scene_{i + 1}_dia_{j + 1}.wav")
-            audio_clips.append(AudioFileClip(dia_path))
-
-        # 3. 把音频绑到图像上
-        if audio_clips:
-            composed_audio = CompositeAudioClip(audio_clips)
-            img_clip = img_clip.with_audio(composed_audio)
-
-        clips.append(img_clip)
-
-    # 4. 串接全部片段
-    final_video = concatenate_videoclips(clips)
-
-    # 5. 输出
+    # 输出文件路径
     output_path = os.path.join(project_dir, "final_video.mp4")
-    final_video.write_videofile(
+
+    # 写入视频文件
+    video_clip.write_videofile(
         output_path,
-        fps=VIDEO_FPS,
+        fps=24,
         codec="libx264",
         audio_codec="aac",
     )
+
+    # 关闭剪辑，释放资源
+    video_clip.close()
+    audio_clip.close()
 
     return output_path
